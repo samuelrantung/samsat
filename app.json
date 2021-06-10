@@ -1,4 +1,5 @@
 {
   "name": "samsat",
-  "displayName": "samsat"
+  "displayName": "samsat",
+  "orientation": "portrait"
 }
