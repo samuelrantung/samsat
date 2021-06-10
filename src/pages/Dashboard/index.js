@@ -4,14 +4,25 @@ import {colors, fonts, IMGDashboard} from '../../assets';
 import {Button, Carousel} from '../../components';
 import VehicleList from './VehicleList';
 import IconBadge from 'react-native-icon-badge';
+import {notification} from '../../notification/index';
 
-let notification = 6;
 const Dashboard = ({navigation}) => {
+  onPress = () => {
+    notification.configure();
+    notification.createChannel('1');
+    notification.sendNotification(
+      '1',
+      'CB150R',
+      'Pembayaran sebesar Rp.312.100,- jatuh tempo tanggal 11 Juni 2021',
+    );
+  };
+
+  let notificationBadge = 6;
   return (
     <View style={styles.page}>
       <Image source={IMGDashboard} style={styles.backgroundImage} />
       <View style={styles.topIconContainer}>
-        <Button type="icon-only" icon="icon-help" />
+        <Button type="icon-only" icon="icon-help" onPress={onPress} />
 
         <IconBadge
           MainElement={
@@ -21,7 +32,9 @@ const Dashboard = ({navigation}) => {
               onPress={() => navigation.navigate('Notification')}
             />
           }
-          BadgeElement={<Text style={styles.badgeElement}>{notification}</Text>}
+          BadgeElement={
+            <Text style={styles.badgeElement}>{notificationBadge}</Text>
+          }
           IconBadgeStyle={styles.iconBadgeStyle}
           Hidden={notification === 0}
         />
