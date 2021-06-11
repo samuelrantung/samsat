@@ -1,10 +1,20 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {colors, fonts, IMGDashboard} from '../../assets';
 import {Button, Carousel} from '../../components';
 import VehicleList from './VehicleList';
 import IconBadge from 'react-native-icon-badge';
 import {notification} from '../../notification/index';
+import axios from 'axios';
+import {useState} from 'react/cjs/react.development';
+import Vehicle from './Vehicle';
 
 const Dashboard = ({navigation}) => {
   onPress = () => {
@@ -15,6 +25,31 @@ const Dashboard = ({navigation}) => {
       'CB150R',
       'Pembayaran sebesar Rp.312.100,- jatuh tempo tanggal 11 Juni 2021',
     );
+  };
+
+  const [vehicles, setVehicles] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState({});
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    axios
+      .get('http://10.0.2.2:3004/vehicles')
+      .then(res => {
+        console.log('res get data: ', res);
+        setVehicles(res.data);
+      })
+      .catch(error => console.log(error));
+  };
+
+  const selectItem = vehicle => {
+    console.log('selected item: ', vehicle);
+
+    navigation.navigate('VehicleDetail', {
+      vehicle,
+    });
   };
 
   let notificationBadge = 6;
@@ -55,7 +90,21 @@ const Dashboard = ({navigation}) => {
           <Text style={styles.more}>Lihat Semua</Text>
         </TouchableOpacity>
       </View>
-      <VehicleList onPress={() => navigation.navigate('VehicleDetail')} />
+      <ScrollView horizontal={true} style={styles.container}>
+        {vehicles.map(vehicle => {
+          return (
+            <Vehicle
+              key={vehicle.id}
+              policeNumber={vehicle.nomorPolisi}
+              vehicleName={vehicle.vehicleName}
+              vehicleType={vehicle.vehicleType}
+              price={vehicle.price}
+              onPress={() => selectItem(vehicle)}
+              dueDate={vehicle.masaBerlakuSTNK}
+            />
+          );
+        })}
+      </ScrollView>
 
       <View style={styles.bottomTabContainer}>
         <Button

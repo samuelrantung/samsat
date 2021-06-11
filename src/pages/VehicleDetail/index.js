@@ -7,12 +7,16 @@ import {
   Image,
   TextInput,
 } from 'react-native';
+import {Value} from 'react-native-reanimated';
 import {colors, fonts, IconEdit, IMGStnk, IMGVehicle} from '../../assets';
 import {TopBar} from '../../components';
 import AddPicture from './AddPicture';
 import VehicleDetailContent from './VehicleDetailContent';
+import NumberFormat from 'react-number-format';
 
-const VehicleDetail = ({navigation}) => {
+const VehicleDetail = ({navigation, route}) => {
+  const {vehicle} = route.params;
+  console.log('wkwkwkwkwk : ', vehicle);
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -32,7 +36,7 @@ const VehicleDetail = ({navigation}) => {
                 <Image source={IMGStnk} />
               </View>
               <View style={styles.paymentDueTitleContainer}>
-                <Text style={styles.paymentDueText}>Pembayaran Sebelum</Text>
+                <Text style={styles.paymentDueText}>Pembayaran sebelum</Text>
               </View>
             </View>
             <View>
@@ -43,10 +47,19 @@ const VehicleDetail = ({navigation}) => {
               </View>
               <View style={styles.paymentTotalContainer}>
                 <Text style={styles.paymentTotal}>Rp</Text>
-                <Text style={styles.paymentTotal}>312.100</Text>
+                <NumberFormat
+                  value={vehicle.price}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                  renderText={value => (
+                    <Text style={styles.paymentTotal}>{value}</Text>
+                  )}
+                />
               </View>
               <View style={styles.paymentDueDateContainer}>
-                <Text style={styles.paymentDueText}>26 Januari 2020</Text>
+                <Text style={styles.paymentDueText}>
+                  {vehicle.masaBerlakuSTNK}
+                </Text>
               </View>
             </View>
           </View>
@@ -62,24 +75,24 @@ const VehicleDetail = ({navigation}) => {
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR MESIN"
-                    content="HGAI-7588976"
+                    content={vehicle.nomorMesin}
                   />
                   <VehicleDetailContent
                     title="TAHUN PEMBUATAN"
-                    content="2016"
+                    content={vehicle.tahunPembuatan}
                   />
-                  <VehicleDetailContent title="TYPE" content="HSGD" />
+                  <VehicleDetailContent title="TYPE" content={vehicle.type} />
                 </View>
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR POLISI"
-                    content="DB 5848 C"
+                    content={vehicle.nomorPolisi}
                   />
                   <VehicleDetailContent
                     title="MASA BERLAKU STNK"
-                    content="25 MEI 2023"
+                    content={vehicle.masaBerlakuSTNK}
                   />
-                  <VehicleDetailContent title="SERI" content="HGA163" />
+                  <VehicleDetailContent title="SERI" content={vehicle.seri} />
                 </View>
               </View>
             </View>
