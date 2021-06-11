@@ -1,24 +1,43 @@
 {
-  "posts": [
+  "vehicles": [
     {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "nomorMesin": "HGAI-7588976",
+      "tahunPembuatan": 2016,
+      "type": "HSGD",
+      "seri": "HGAI163",
+      "nomorPolisi": "DB 5848 C",
+      "vehicleName": "Honda CB150R",
+      "vehicleType": "HONDA H5C02R20M1 M/T",
+      "masaBerlakuSTNK": "25 Jan 2020",
+      "price": 1312000,
+      "fotoSTNK": "",
+      "id": 1
     },
     {
-      "title": "samuel",
-      "author": "rantung",
+      "nomorMesin": "HGAI-7588976",
+      "tahunPembuatan": 2016,
+      "type": "HSGD",
+      "seri": "HGAI163",
+      "nomorPolisi": "DB 5848 C",
+      "vehicleName": "Honda CB150R",
+      "vehicleType": "HONDA H5C02R20M1 M/T",
+      "masaBerlakuSTNK": "25 Jan 2020",
+      "price": 2312000,
+      "fotoSTNK": "",
       "id": 2
-    }
-  ],
-  "comments": [
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "nomorMesin": "HGAI-7588976",
+      "tahunPembuatan": 2016,
+      "type": "HSGD",
+      "seri": "HGAI163",
+      "nomorPolisi": "DB 5848 C",
+      "vehicleName": "Honda CB150R",
+      "vehicleType": "HONDA H5C02R20M1 M/T",
+      "masaBerlakuSTNK": "25 Jan 2020",
+      "price": 3312000,
+      "fotoSTNK": "",
+      "id": 3
     }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }

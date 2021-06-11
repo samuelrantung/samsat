@@ -1,4 +1,7 @@
+import {useScrollToTop} from '@react-navigation/native';
+import axios from 'axios';
 import React from 'react';
+import {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,6 +10,7 @@ import {
   Image,
   FlatList,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import {colors, fonts, IMGVehicle} from '../../assets';
 import DATA from './VehicleData';
@@ -47,28 +51,39 @@ const Vehicle = ({
   </TouchableWithoutFeedback>
 );
 
-const VehicleList = ({onPress}) => {
-  const renderItem = ({item}) => (
-    <Vehicle
-      policeNumber={item.policeNumber}
-      vehicleName={item.vehicleName}
-      vehicleType={item.vehicleType}
-      price={item.price}
-      onPress={onPress}
-      dueDate={item.dueDate}
-    />
-  );
+const VehicleList = ({onPress, nomorPolisi}) => {
+  const [vehicles, setVehicles] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    axios
+      .get('http://10.0.2.2:3004/vehicles')
+      .then(res => {
+        console.log('res get data: ', res);
+        setVehicles(res.data);
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        horizontal
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        showsHorizontalScrollIndicator={false}
-      />
-    </SafeAreaView>
+    <ScrollView horizontal={true} style={styles.container}>
+      {vehicles.map(vehicle => {
+        return (
+          <Vehicle
+            key={vehicle.id}
+            policeNumber={vehicle.nomorPolisi}
+            vehicleName={vehicle.vehicleName}
+            vehicleType={vehicle.vehicleType}
+            price={vehicle.price}
+            onPress={onPress}
+            dueDate={vehicle.masaBerlakuSTNK}
+          />
+        );
+      })}
+    </ScrollView>
   );
 };
 
