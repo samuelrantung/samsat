@@ -15,6 +15,7 @@ import {notification} from '../../notification/index';
 import axios from 'axios';
 import {useState} from 'react/cjs/react.development';
 import Vehicle from './Vehicle';
+import data from '../../data/data';
 
 const Dashboard = ({navigation}) => {
   onPress = () => {

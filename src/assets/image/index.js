@@ -1,7 +1,7 @@
 import IMGKorlantas from './img-korlantas.png';
 import IMGDashboard from './img-dashboard.png';
 import IMGCarousel from './img-carousel.png';
-import IMGVehicle from './img-vehicle.png';
+// import IMGVehicle from './img-vehicle.png';
 import IMGStnk from './img-stnk.png';
 import IMGSatlantas from './img-satlantas.png';
 import IMGJasaRaharja from './img-jasaraharja.png';
@@ -16,7 +16,7 @@ export {
   IMGKorlantas,
   IMGDashboard,
   IMGCarousel,
-  IMGVehicle,
+  // IMGVehicle,
   IMGStnk,
   IMGSatlantas,
   IMGJasaRaharja,

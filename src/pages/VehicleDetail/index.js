@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,17 +6,64 @@ import {
   View,
   Image,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {Value} from 'react-native-reanimated';
-import {colors, fonts, IconEdit, IMGStnk, IMGVehicle} from '../../assets';
-import {TopBar} from '../../components';
-import AddPicture from './AddPicture';
+import {colors, fonts, IconEdit, IMGStnk, IconPlus} from '../../assets';
+import {Button, TopBar} from '../../components';
+// import AddPicture from './AddPicture';
 import VehicleDetailContent from './VehicleDetailContent';
 import NumberFormat from 'react-number-format';
+import {launchImageLibrary} from 'react-native-image-picker';
+
+const AddPicture = ({text}) => {
+  const [image, setImage] = useState({});
+  const openLibrary = () => {
+    const options = {
+      includeBase64: true,
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('response: ', response);
+      setImage(response);
+    });
+  };
+  if (image.assets) {
+    console.log('setfirstImage: ', onSetFirstImage);
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.addPicture}
+          // onPress={() => openLibrary()}>
+          onPress={openLibrary}>
+          <Image source={image.assets} style={{width: 100, height: 100}} />
+          {/* <IconPlus style={styles.iconPlus} />
+          <Text style={styles.addPictureText}>{text}</Text> */}
+        </TouchableOpacity>
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.addPicture}
+          // onPress={() => openLibrary()}>
+          onPress={openLibrary}>
+          {/* <Image source={data.assets} style={{width: 100, height: 100}} /> */}
+          <IconPlus style={styles.iconPlus} />
+          <Text style={styles.addPictureText}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+};
 
 const VehicleDetail = ({navigation, route}) => {
   const {vehicle} = route.params;
-  console.log('wkwkwkwkwk : ', vehicle);
+  console.log('wkwkwkwkwk : ', vehicle.fotoMotor);
+  const vehiclePath = vehicle.fotoMotor;
+  // const [firstImage, setFirstImage] = useState({});
+
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -24,7 +71,10 @@ const VehicleDetail = ({navigation, route}) => {
         <View style={styles.pictureWrapper}>
           <Text style={styles.title}>Foto Kendaraan</Text>
           <View style={styles.pictureContainer}>
-            <Image source={IMGVehicle} style={styles.image} />
+            <AddPicture
+              text="Foto Pertama"
+              // onSetFirstImage={firstImage={firstImage} setFirstImage={setFirstImage}}
+            />
             <AddPicture text="Foto Kedua" />
             <AddPicture text="Foto Ketiga" />
           </View>
@@ -94,6 +144,9 @@ const VehicleDetail = ({navigation, route}) => {
                   />
                   <VehicleDetailContent title="SERI" content={vehicle.seri} />
                 </View>
+              </View>
+              <View>
+                <Button label="Simpan" />
               </View>
             </View>
           </View>
@@ -217,5 +270,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+  },
+
+  addPicture: {
+    height: 100,
+    width: 100,
+    backgroundColor: colors.lightGrey,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+  },
+  addPictureText: {
+    fontFamily: fonts.Poppins.regular,
+    fontSize: 12,
+    color: colors.white,
+    position: 'absolute',
+    bottom: 13,
   },
 });
