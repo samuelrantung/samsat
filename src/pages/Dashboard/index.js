@@ -16,9 +16,16 @@ import axios from 'axios';
 import {useState} from 'react/cjs/react.development';
 import Vehicle from './Vehicle';
 import data from '../../data/data';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Dashboard = ({navigation}) => {
-  onPress = () => {
+  const DashboardReducer = useSelector(state => state.DashboardReducer);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log('dashboard reducer: ', DashboardReducer);
+  }, []);
+
+  const onPress = () => {
     notification.configure();
     notification.createChannel('1');
     notification.sendNotification(
@@ -28,8 +35,7 @@ const Dashboard = ({navigation}) => {
     );
   };
 
-  const [vehicles, setVehicles] = useState([]);
-  const [selectedVehicle, setSelectedVehicle] = useState({});
+  // const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
     getData();
@@ -40,7 +46,9 @@ const Dashboard = ({navigation}) => {
       .get('http://10.0.2.2:3004/vehicles')
       .then(res => {
         console.log('res get data: ', res);
-        setVehicles(res.data);
+        // setVehicles(res.data);
+        dispatch({type: 'SET_VEHICLE', res: res});
+        console.log('hasil dispatch: ', DashboardReducer.vehicles);
       })
       .catch(error => console.log(error));
   };
@@ -92,7 +100,7 @@ const Dashboard = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <ScrollView horizontal={true} style={styles.container}>
-        {vehicles.map(vehicle => {
+        {DashboardReducer.vehicles.map(vehicle => {
           return (
             <Vehicle
               key={vehicle.id}
