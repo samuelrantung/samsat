@@ -11,7 +11,7 @@
       "masaBerlakuSTNK": "25 Jan 2020",
       "price": 1312000,
       "fotoSTNK": "",
-      "fotoMotor": "../../assets/image/img-vehicle.png",
+      "fotoMotor": "",
       "id": 1
     },
     {
@@ -25,7 +25,7 @@
       "masaBerlakuSTNK": "25 Jan 2020",
       "price": 2312000,
       "fotoSTNK": "",
-      "fotoMotor": "../../assets/image/img-vehicle-2.png",
+      "fotoMotor": "",
       "id": 2
     },
     {
@@ -39,7 +39,7 @@
       "masaBerlakuSTNK": "25 Jan 2020",
       "price": 3312000,
       "fotoSTNK": "",
-      "fotoMotor": "../../assets/image/img-vehicle-2.png",
+      "fotoMotor": "",
       "id": 3
     }
   ]

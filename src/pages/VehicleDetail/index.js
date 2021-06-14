@@ -16,11 +16,12 @@ import VehicleDetailContent from './VehicleDetailContent';
 import NumberFormat from 'react-number-format';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import {getImage} from '../../redux/action';
+import {getImage, addPhotos} from '../../redux/action';
 
-const AddPicture = ({text}) => {
+const AddPicture = ({text, type}) => {
   const VehicleDetailReducer = useSelector(state => state.VehicleDetailReducer);
-  const hehe = useDispatch();
+  console.log('VehicleDetailReducer di screen : ', VehicleDetailReducer);
+  const dispatch = useDispatch();
   const [image, setImage] = useState({});
 
   const openLibrary = () => {
@@ -30,20 +31,25 @@ const AddPicture = ({text}) => {
 
     launchImageLibrary(options, response => {
       console.log('response: ', response);
-      // setImage(response);
-      hehe(getImage(response));
+      setImage(response);
+      dispatch(getImage(response));
+      dispatch(addPhotos(response));
     });
   };
-  if (image.assets) {
+  if (VehicleDetailReducer.image) {
     return (
       <View>
         <TouchableOpacity
           style={styles.addPicture}
           // onPress={() => openLibrary()}>
           onPress={openLibrary}>
-          <Image source={image.assets} style={{width: 100, height: 100}} />
+          <Image
+            source={VehicleDetailReducer.image[type]}
+            style={{width: 100, height: 100}}
+          />
           {/* <IconPlus style={styles.iconPlus} />
           <Text style={styles.addPictureText}>{text}</Text> */}
+          {console.log('Image placed: ', VehicleDetailReducer)}
         </TouchableOpacity>
       </View>
     );
@@ -66,8 +72,7 @@ const AddPicture = ({text}) => {
 const VehicleDetail = ({navigation, route}) => {
   const {vehicle} = route.params;
   const DashboardReducer = useSelector(state => state.DashboardReducer);
-  // console.log('wkwkwkwkwk : ', vehicle.fotoMotor);
-  // console.log('vehicle detail: ', vehicle.id);
+
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -75,14 +80,10 @@ const VehicleDetail = ({navigation, route}) => {
         <View style={styles.pictureWrapper}>
           <Text style={styles.title}>Foto Kendaraan</Text>
           <View style={styles.pictureContainer}>
-            <AddPicture
-              text="Foto Pertama"
-              // onSetFirstImage={firstImage={firstImage} setFirstImage={setFirstImage}}
-            />
-            <AddPicture text="Foto Kedua" />
-            <AddPicture text="Foto Ketiga" />
+            <AddPicture text="Foto Pertama" type={1} />
+            <AddPicture text="Foto Kedua" type={2} />
+            <AddPicture text="Foto Ketiga" type={3} />
           </View>
-
           <View style={styles.taxInformationContainer}>
             <View>
               <View style={styles.documentPictureContainer}>
@@ -135,7 +136,7 @@ const VehicleDetail = ({navigation, route}) => {
                   />
                   <VehicleDetailContent
                     title="TAHUN PEMBUATAN"
-                    // content={vehicle.tahunPembuatan}
+                    content={vehicle.tahunPembuatan}
                   />
                   <VehicleDetailContent
                     title="TYPE"

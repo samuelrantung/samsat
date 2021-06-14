@@ -61,7 +61,6 @@ const Dashboard = ({navigation}) => {
 
     navigation.navigate('VehicleDetail', {
       vehicle,
-      // vehicle
     });
   };
 
