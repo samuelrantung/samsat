@@ -17,6 +17,7 @@ import {useState} from 'react/cjs/react.development';
 import Vehicle from './Vehicle';
 import data from '../../data/data';
 import {useDispatch, useSelector} from 'react-redux';
+import {getVehicles} from '../../redux/action';
 
 const Dashboard = ({navigation}) => {
   const DashboardReducer = useSelector(state => state.DashboardReducer);
@@ -47,9 +48,11 @@ const Dashboard = ({navigation}) => {
       .then(res => {
         console.log('res get data: ', res);
         // setVehicles(res.data);
-        dispatch({type: 'SET_VEHICLE', res: res});
+        // dispatch({type: 'SET_VEHICLE', res: res});
+        dispatch(getVehicles(res));
         console.log('hasil dispatch: ', DashboardReducer.vehicles);
       })
+      .then(console.log('hasil dispatch luar: ', DashboardReducer))
       .catch(error => console.log(error));
   };
 
@@ -58,6 +61,7 @@ const Dashboard = ({navigation}) => {
 
     navigation.navigate('VehicleDetail', {
       vehicle,
+      // vehicle
     });
   };
 

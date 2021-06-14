@@ -15,9 +15,14 @@ import {Button, TopBar} from '../../components';
 import VehicleDetailContent from './VehicleDetailContent';
 import NumberFormat from 'react-number-format';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {getImage} from '../../redux/action';
 
 const AddPicture = ({text}) => {
+  const VehicleDetailReducer = useSelector(state => state.VehicleDetailReducer);
+  const hehe = useDispatch();
   const [image, setImage] = useState({});
+
   const openLibrary = () => {
     const options = {
       includeBase64: true,
@@ -25,11 +30,11 @@ const AddPicture = ({text}) => {
 
     launchImageLibrary(options, response => {
       console.log('response: ', response);
-      setImage(response);
+      // setImage(response);
+      hehe(getImage(response));
     });
   };
   if (image.assets) {
-    console.log('setfirstImage: ', onSetFirstImage);
     return (
       <View>
         <TouchableOpacity
@@ -60,10 +65,9 @@ const AddPicture = ({text}) => {
 
 const VehicleDetail = ({navigation, route}) => {
   const {vehicle} = route.params;
-  console.log('wkwkwkwkwk : ', vehicle.fotoMotor);
-  const vehiclePath = vehicle.fotoMotor;
-  // const [firstImage, setFirstImage] = useState({});
-
+  const DashboardReducer = useSelector(state => state.DashboardReducer);
+  // console.log('wkwkwkwkwk : ', vehicle.fotoMotor);
+  // console.log('vehicle detail: ', vehicle.id);
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -98,7 +102,7 @@ const VehicleDetail = ({navigation, route}) => {
               <View style={styles.paymentTotalContainer}>
                 <Text style={styles.paymentTotal}>Rp</Text>
                 <NumberFormat
-                  value={vehicle.price}
+                  value={DashboardReducer.vehicles[vehicle.id - 1].price}
                   displayType={'text'}
                   thousandSeparator={true}
                   renderText={value => (
@@ -108,7 +112,7 @@ const VehicleDetail = ({navigation, route}) => {
               </View>
               <View style={styles.paymentDueDateContainer}>
                 <Text style={styles.paymentDueText}>
-                  {vehicle.masaBerlakuSTNK}
+                  {DashboardReducer.vehicles[vehicle.id - 1].masaBerlakuSTNK}
                 </Text>
               </View>
             </View>
@@ -125,24 +129,36 @@ const VehicleDetail = ({navigation, route}) => {
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR MESIN"
-                    content={vehicle.nomorMesin}
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].nomorMesin
+                    }
                   />
                   <VehicleDetailContent
                     title="TAHUN PEMBUATAN"
-                    content={vehicle.tahunPembuatan}
+                    // content={vehicle.tahunPembuatan}
                   />
-                  <VehicleDetailContent title="TYPE" content={vehicle.type} />
+                  <VehicleDetailContent
+                    title="TYPE"
+                    content={DashboardReducer.vehicles[vehicle.id - 1].type}
+                  />
                 </View>
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR POLISI"
-                    content={vehicle.nomorPolisi}
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].nomorPolisi
+                    }
                   />
                   <VehicleDetailContent
                     title="MASA BERLAKU STNK"
-                    content={vehicle.masaBerlakuSTNK}
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].masaBerlakuSTNK
+                    }
                   />
-                  <VehicleDetailContent title="SERI" content={vehicle.seri} />
+                  <VehicleDetailContent
+                    title="SERI"
+                    content={DashboardReducer.vehicles[vehicle.id - 1].seri}
+                  />
                 </View>
               </View>
               <View>

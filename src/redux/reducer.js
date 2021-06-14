@@ -1,23 +1,35 @@
+import {SET_IMAGE, SET_VEHICLES} from './action';
+
 import {combineReducers} from 'redux';
 
 const initialStateVehicleDetail = {
-  fotoKendaraan: 'hehehe',
+  image: {},
 };
 
 const VehicleDetailReducer = (state = initialStateVehicleDetail, action) => {
+  if (action.type === SET_IMAGE) {
+    console.log('VehicleDetailReducer: ', action);
+    // return{
+    //   ...state,
+
+    // }
+  }
   return state;
 };
 
 const initialStateDashboard = {
   vehicles: [],
-  // title: "samuel rantung",
 };
 
 const DashboardReducer = (state = initialStateDashboard, action) => {
-  if (action.type === 'SET_VEHICLE') {
+  if (action.type === SET_VEHICLES) {
+    console.log('DashboardReducer: wkwkwkwk ', action.payload.data);
+
     return {
       ...state,
-      vehicles: [...state.vehicles, action.res],
+      // vehicles: [...state.vehicles, action.payload.data],
+      vehicles: action.payload.data,
+      // vehicles: payload,
     };
   }
   return state;
@@ -25,6 +37,7 @@ const DashboardReducer = (state = initialStateDashboard, action) => {
 
 const reducer = combineReducers({
   DashboardReducer,
+  VehicleDetailReducer,
 });
 
 export default reducer;
