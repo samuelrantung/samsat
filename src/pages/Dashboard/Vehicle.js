@@ -16,6 +16,7 @@ import NumberFormat from 'react-number-format';
 import {colors, fonts, IMGVehicle} from '../../assets';
 
 const Vehicle = ({
+  fotoMotor,
   policeNumber,
   vehicleName,
   vehicleType,
@@ -26,7 +27,10 @@ const Vehicle = ({
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.vehicleContainer}>
       <View style={styles.pictureContainer}>
-        <Image source={IMGVehicle} />
+        <Image
+          source={{uri: `data:image/png;base64,${fotoMotor}`}}
+          style={{width: 160, height: 160}}
+        />
       </View>
       <View style={styles.vehicleText}>
         <Text style={styles.policeNumber}>{policeNumber}</Text>

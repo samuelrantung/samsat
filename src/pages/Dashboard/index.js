@@ -107,6 +107,7 @@ const Dashboard = ({navigation}) => {
           return (
             <Vehicle
               key={vehicle.id}
+              fotoMotor={vehicle.fotoMotor}
               policeNumber={vehicle.nomorPolisi}
               vehicleName={vehicle.vehicleName}
               vehicleType={vehicle.vehicleType}

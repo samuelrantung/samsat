@@ -16,27 +16,48 @@ import VehicleDetailContent from './VehicleDetailContent';
 import NumberFormat from 'react-number-format';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import {getImage, addPhotos} from '../../redux/action';
+import {getImage, addPhotos, updateVehicle} from '../../redux/action';
+import axios from 'axios';
 
-const AddPicture = ({text, type}) => {
+const AddPicture = ({text, type, vehicle}) => {
   const VehicleDetailReducer = useSelector(state => state.VehicleDetailReducer);
+  const UpdateVehicleReducer = useSelector(state => state.UpdateVehicleReducer);
   console.log('VehicleDetailReducer di screen : ', VehicleDetailReducer);
+  // const DashboardReducer = useSelector(state => state.DashboardReducer);
+  console.log('Vehicle di addpicture: ', vehicle);
   const dispatch = useDispatch();
   const [image, setImage] = useState({});
+  const [vehicleData, setVehicleData] = useState({vehicle});
 
   const openLibrary = () => {
     const options = {
       includeBase64: true,
     };
-
+    dispatch(updateVehicle(vehicle));
     launchImageLibrary(options, response => {
-      console.log('response: ', response);
+      console.log('response: ', response.assets);
       setImage(response);
       dispatch(getImage(response));
-      dispatch(addPhotos(response));
+      const data = JSON.stringify(response.assets[0].base64);
+      // const data = JSON.stringify('wkwkwkwkkwwk');
+      console.log('json stringify: ', data);
+      vehicle.fotoMotor = data;
+      console.log('vehicle setelah update fotomotor: ', vehicle);
+      axios
+        .put('http://10.0.2.2:3004/vehicles/' + vehicle.id, vehicle, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => {
+          console.log('post success: ', response);
+        });
+      // .catch(error => {
+      //   console.log('err: ', error);
+      // });
     });
   };
-  if (VehicleDetailReducer.image) {
+  if (image.assets) {
     return (
       <View>
         <TouchableOpacity
@@ -44,12 +65,11 @@ const AddPicture = ({text, type}) => {
           // onPress={() => openLibrary()}>
           onPress={openLibrary}>
           <Image
-            source={VehicleDetailReducer.image[type]}
+            source={{uri: `data:image/png;base64,${vehicle.fotoMotor}`}}
             style={{width: 100, height: 100}}
           />
           {/* <IconPlus style={styles.iconPlus} />
           <Text style={styles.addPictureText}>{text}</Text> */}
-          {console.log('Image placed: ', VehicleDetailReducer)}
         </TouchableOpacity>
       </View>
     );
@@ -72,7 +92,6 @@ const AddPicture = ({text, type}) => {
 const VehicleDetail = ({navigation, route}) => {
   const {vehicle} = route.params;
   const DashboardReducer = useSelector(state => state.DashboardReducer);
-
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -80,9 +99,9 @@ const VehicleDetail = ({navigation, route}) => {
         <View style={styles.pictureWrapper}>
           <Text style={styles.title}>Foto Kendaraan</Text>
           <View style={styles.pictureContainer}>
-            <AddPicture text="Foto Pertama" type={1} />
-            <AddPicture text="Foto Kedua" type={2} />
-            <AddPicture text="Foto Ketiga" type={3} />
+            <AddPicture text="Foto Pertama" type={1} vehicle={vehicle} />
+            {/* <AddPicture text="Foto Kedua" type={2} />
+            <AddPicture text="Foto Ketiga" type={3} /> */}
           </View>
           <View style={styles.taxInformationContainer}>
             <View>

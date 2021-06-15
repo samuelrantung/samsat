@@ -1,6 +1,21 @@
-import {SET_IMAGE, SET_VEHICLES, ADD_PHOTOS} from './action';
+import {SET_IMAGE, SET_VEHICLES, UPDATE_VEHICLES} from './action';
 
 import {combineReducers} from 'redux';
+
+const initialStateUpdateVehicle = {
+  vehicle: [],
+};
+
+const UpdateVehicleReducer = (state = initialStateUpdateVehicle, action) => {
+  if (action.type === UPDATE_VEHICLES) {
+    console.log('UpdateVehicleReducer: ', action);
+    return {
+      ...state,
+      vehicle: action.payload,
+    };
+  }
+  return state;
+};
 
 const initialStateVehicleDetail = {
   // image: [{pertama: {}, kedua: {}, ketiga: {}}],
@@ -12,8 +27,8 @@ const VehicleDetailReducer = (state = initialStateVehicleDetail, action) => {
     console.log('VehicleDetailReducer: ', action);
     return {
       ...state,
-      // image: action.payload,
-      image: [...state.image, action.payload.assets],
+      image: action.payload,
+      // image: [...state.image, action.payload.assets],
     };
   }
   return state;
@@ -36,18 +51,13 @@ const DashboardReducer = (state = initialStateDashboard, action) => {
       // vehicles: payload,
     };
   }
-  if (action.type === ADD_PHOTOS) {
-    console.log('ADD photos :', action.payload);
-    // return {
-    //   action.payload.
-    // }
-  }
   return state;
 };
 
 const reducer = combineReducers({
   DashboardReducer,
   VehicleDetailReducer,
+  UpdateVehicleReducer,
 });
 
 export default reducer;
