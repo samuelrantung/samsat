@@ -35,29 +35,33 @@ const AddPicture = ({text, type, vehicle}) => {
     };
     dispatch(updateVehicle(vehicle));
     launchImageLibrary(options, response => {
-      console.log('response: ', response.assets);
-      setImage(response);
-      dispatch(getImage(response));
-      const data = JSON.stringify(response.assets[0].base64);
-      // const data = JSON.stringify('wkwkwkwkkwwk');
-      console.log('json stringify: ', data);
-      vehicle.fotoMotor = data;
-      console.log('vehicle setelah update fotomotor: ', vehicle);
-      axios
-        .put('http://10.0.2.2:3004/vehicles/' + vehicle.id, vehicle, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(response => {
-          console.log('post success: ', response);
-        });
-      // .catch(error => {
-      //   console.log('err: ', error);
-      // });
+      console.log('response: ', response);
+      if (response.didCancel === true) {
+      } else {
+        setImage(response);
+        dispatch(getImage(response));
+        const data = JSON.stringify(response.assets[0].base64);
+        // const data = JSON.stringify('wkwkwkwkkwwk');
+        console.log('json stringify: ', data);
+        console.log('reducer getImage: ', VehicleDetailReducer.image);
+        vehicle.fotoMotor = data;
+        console.log('vehicle setelah update fotomotor: ', vehicle);
+        axios
+          .put('http://10.0.2.2:3004/vehicles/' + vehicle.id, vehicle, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            console.log('post success: ', response);
+          });
+        // .catch(error => {
+        //   console.log('err: ', error);
+        // });
+      }
     });
   };
-  if (image.assets) {
+  if (vehicle.fotoMotor) {
     return (
       <View>
         <TouchableOpacity

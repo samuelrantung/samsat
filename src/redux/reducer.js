@@ -19,7 +19,8 @@ const UpdateVehicleReducer = (state = initialStateUpdateVehicle, action) => {
 
 const initialStateVehicleDetail = {
   // image: [{pertama: {}, kedua: {}, ketiga: {}}],
-  image: [],
+  // image: [],
+  hehe: [],
 };
 
 const VehicleDetailReducer = (state = initialStateVehicleDetail, action) => {
@@ -27,8 +28,11 @@ const VehicleDetailReducer = (state = initialStateVehicleDetail, action) => {
     console.log('VehicleDetailReducer: ', action);
     return {
       ...state,
-      image: action.payload,
-      // image: [...state.image, action.payload.assets],
+      // image: action.payload,
+      Image: {
+        ...state.hehe,
+      },
+      // // image: [...state.image, action.payload.assets],
     };
   }
   return state;

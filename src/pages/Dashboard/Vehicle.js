@@ -13,7 +13,7 @@ import {
   ScrollView,
 } from 'react-native';
 import NumberFormat from 'react-number-format';
-import {colors, fonts, IMGVehicle} from '../../assets';
+import {colors, fonts, IMGVehicle, IMGVehicleDummy} from '../../assets';
 
 const Vehicle = ({
   fotoMotor,
@@ -27,10 +27,14 @@ const Vehicle = ({
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.vehicleContainer}>
       <View style={styles.pictureContainer}>
-        <Image
-          source={{uri: `data:image/png;base64,${fotoMotor}`}}
-          style={{width: 160, height: 160}}
-        />
+        {fotoMotor ? (
+          <Image
+            source={{uri: `data:image/png;base64,${fotoMotor}`}}
+            style={styles.image}
+          />
+        ) : (
+          <Image source={IMGVehicleDummy} style={styles.image} />
+        )}
       </View>
       <View style={styles.vehicleText}>
         <Text style={styles.policeNumber}>{policeNumber}</Text>
@@ -67,11 +71,17 @@ const styles = StyleSheet.create({
     height: 350,
     flexDirection: 'row',
   },
+  image: {
+    width: 160,
+    height: 160,
+  },
   pictureContainer: {
     height: 160,
     width: 160,
     borderRadius: 18,
     marginTop: -60,
+    elevation: 5,
+    backgroundColor: colors.white,
   },
   vehicleContainer: {
     height: 228,
