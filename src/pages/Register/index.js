@@ -11,11 +11,9 @@ import {
   colors,
   fonts,
   IMGBapenda,
-  IMGFik,
   IMGJasaRaharja,
   IMGPemprov,
   IMGSatlantas,
-  IMGUnklab,
 } from '../../assets';
 import {useForm} from '../../assets/useForm';
 import {Gap, TextInput, CheckBox, Button} from '../../components';
@@ -32,11 +30,11 @@ const Login = ({navigation}) => {
 
     firebase
       .auth()
-      .signInWithEmailAndPassword(form.email, form.password)
+      .createUserWithEmailAndPassword(form.email, form.password)
       .then(response => {
         firebase.database().ref(`users/${response.user.uid}/`);
         setForm('reset');
-        navigation.navigate('Dashboard');
+        navigation.navigate('Login');
       })
       .catch(error => {
         console.log(error.message);
@@ -68,34 +66,28 @@ const Login = ({navigation}) => {
       />
       <Gap height={10} />
       <View style={styles.passwordExtrasContainer}>
-        <View style={styles.checkBoxContainer}>
+        {/* <View style={styles.checkBoxContainer}>
           <CheckBox label="Ingat" />
         </View>
         <TouchableOpacity>
           <Text style={styles.forgetPasswordText}>Lupa Password?</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <Gap height={40} />
-      <Button
-        label="Masuk"
-        // onPress={() => navigation.navigate('Dashboard')}
-        onPress={onContinue}
-      />
+      <Button label="Daftar" onPress={onContinue} />
       <Gap height={10} />
       <View style={styles.registerContainer}>
-        <Text style={styles.registerText}>Belum memiliki akun? </Text>
+        <Text style={styles.registerText}>Sudah memiliki akun? </Text>
         <TouchableOpacity
           style={styles.registerButton}
-          onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.registerButtonText}>Daftar</Text>
+          onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.registerButtonText}>Login</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.logoContainer}>
-        <Image source={IMGFik} style={styles.fik} />
         <Image source={IMGSatlantas} style={styles.satlantas} />
         <Image source={IMGPemprov} style={styles.pemprov} />
         <Image source={IMGJasaRaharja} style={styles.jasaraharja} />
-        <Image source={IMGUnklab} style={styles.unklab} />
       </View>
     </SafeAreaView>
   );
@@ -115,14 +107,9 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-around',
+    width: 209,
+    justifyContent: 'space-between',
     marginTop: 35,
-    paddingHorizontal: 15,
-  },
-  fik: {
-    width: 34,
-    height: 43,
   },
   satlantas: {
     width: 48,
@@ -135,10 +122,6 @@ const styles = StyleSheet.create({
   jasaraharja: {
     height: 47,
     width: 43,
-  },
-  unklab: {
-    width: 43,
-    height: 43,
   },
   mainTitle: {
     fontSize: 36,
