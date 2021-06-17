@@ -7,6 +7,7 @@ const Carousel = () => {
   return (
     <View style={styles.carouselContainer}>
       <Swiper
+        autoplay={true}
         showsPagination={false}
         style={styles.carouselWrapper}
         showsButtons={true}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,13 +6,96 @@ import {
   View,
   Image,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import {colors, fonts, IconEdit, IMGStnk, IMGVehicle} from '../../assets';
-import {TopBar} from '../../components';
-import AddPicture from './AddPicture';
+import {Value} from 'react-native-reanimated';
+import {colors, fonts, IconEdit, IMGStnk, IconPlus} from '../../assets';
+import {Button, TopBar} from '../../components';
+// import AddPicture from './AddPicture';
 import VehicleDetailContent from './VehicleDetailContent';
+import NumberFormat from 'react-number-format';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {getImage, addPhotos, updateVehicle} from '../../redux/action';
+import axios from 'axios';
 
-const VehicleDetail = ({navigation}) => {
+const AddPicture = ({text, type, vehicle}) => {
+  const VehicleDetailReducer = useSelector(state => state.VehicleDetailReducer);
+  const UpdateVehicleReducer = useSelector(state => state.UpdateVehicleReducer);
+  console.log('VehicleDetailReducer di screen : ', VehicleDetailReducer);
+  // const DashboardReducer = useSelector(state => state.DashboardReducer);
+  console.log('Vehicle di addpicture: ', vehicle);
+  const dispatch = useDispatch();
+  const [image, setImage] = useState({});
+  const [vehicleData, setVehicleData] = useState({vehicle});
+
+  const openLibrary = () => {
+    const options = {
+      includeBase64: true,
+    };
+    dispatch(updateVehicle(vehicle));
+    launchImageLibrary(options, response => {
+      console.log('response: ', response);
+      if (response.didCancel === true) {
+      } else {
+        setImage(response);
+        dispatch(getImage(response));
+        const data = JSON.stringify(response.assets[0].base64);
+        // const data = JSON.stringify('wkwkwkwkkwwk');
+        console.log('json stringify: ', data);
+        console.log('reducer getImage: ', VehicleDetailReducer.image);
+        vehicle.fotoMotor = data;
+        console.log('vehicle setelah update fotomotor: ', vehicle);
+        axios
+          .put('http://10.0.2.2:3004/vehicles/' + vehicle.id, vehicle, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            console.log('post success: ', response);
+          });
+        // .catch(error => {
+        //   console.log('err: ', error);
+        // });
+      }
+    });
+  };
+  if (vehicle.fotoMotor) {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.addPicture}
+          // onPress={() => openLibrary()}>
+          onPress={openLibrary}>
+          <Image
+            source={{uri: `data:image/png;base64,${vehicle.fotoMotor}`}}
+            style={{width: 100, height: 100}}
+          />
+          {/* <IconPlus style={styles.iconPlus} />
+          <Text style={styles.addPictureText}>{text}</Text> */}
+        </TouchableOpacity>
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.addPicture}
+          // onPress={() => openLibrary()}>
+          onPress={openLibrary}>
+          {/* <Image source={data.assets} style={{width: 100, height: 100}} /> */}
+          <IconPlus style={styles.iconPlus} />
+          <Text style={styles.addPictureText}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+};
+
+const VehicleDetail = ({navigation, route}) => {
+  const {vehicle} = route.params;
+  const DashboardReducer = useSelector(state => state.DashboardReducer);
   return (
     <SafeAreaView style={styles.page}>
       <TopBar title="Rincian Kendaraan" onBack={() => navigation.goBack()} />
@@ -20,11 +103,10 @@ const VehicleDetail = ({navigation}) => {
         <View style={styles.pictureWrapper}>
           <Text style={styles.title}>Foto Kendaraan</Text>
           <View style={styles.pictureContainer}>
-            <Image source={IMGVehicle} style={styles.image} />
-            <AddPicture text="Foto Kedua" />
-            <AddPicture text="Foto Ketiga" />
+            <AddPicture text="Foto Pertama" type={1} vehicle={vehicle} />
+            {/* <AddPicture text="Foto Kedua" type={2} />
+            <AddPicture text="Foto Ketiga" type={3} /> */}
           </View>
-
           <View style={styles.taxInformationContainer}>
             <View>
               <View style={styles.documentPictureContainer}>
@@ -32,7 +114,7 @@ const VehicleDetail = ({navigation}) => {
                 <Image source={IMGStnk} />
               </View>
               <View style={styles.paymentDueTitleContainer}>
-                <Text style={styles.paymentDueText}>Pembayaran Sebelum</Text>
+                <Text style={styles.paymentDueText}>Pembayaran sebelum</Text>
               </View>
             </View>
             <View>
@@ -43,10 +125,19 @@ const VehicleDetail = ({navigation}) => {
               </View>
               <View style={styles.paymentTotalContainer}>
                 <Text style={styles.paymentTotal}>Rp</Text>
-                <Text style={styles.paymentTotal}>312.100</Text>
+                <NumberFormat
+                  value={DashboardReducer.vehicles[vehicle.id - 1].price}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                  renderText={value => (
+                    <Text style={styles.paymentTotal}>{value}</Text>
+                  )}
+                />
               </View>
               <View style={styles.paymentDueDateContainer}>
-                <Text style={styles.paymentDueText}>26 Januari 2020</Text>
+                <Text style={styles.paymentDueText}>
+                  {DashboardReducer.vehicles[vehicle.id - 1].masaBerlakuSTNK}
+                </Text>
               </View>
             </View>
           </View>
@@ -62,25 +153,40 @@ const VehicleDetail = ({navigation}) => {
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR MESIN"
-                    content="HGAI-7588976"
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].nomorMesin
+                    }
                   />
                   <VehicleDetailContent
                     title="TAHUN PEMBUATAN"
-                    content="2016"
+                    content={vehicle.tahunPembuatan}
                   />
-                  <VehicleDetailContent title="TYPE" content="HSGD" />
+                  <VehicleDetailContent
+                    title="TYPE"
+                    content={DashboardReducer.vehicles[vehicle.id - 1].type}
+                  />
                 </View>
                 <View style={styles.column}>
                   <VehicleDetailContent
                     title="NOMOR POLISI"
-                    content="DB 5848 C"
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].nomorPolisi
+                    }
                   />
                   <VehicleDetailContent
                     title="MASA BERLAKU STNK"
-                    content="25 MEI 2023"
+                    content={
+                      DashboardReducer.vehicles[vehicle.id - 1].masaBerlakuSTNK
+                    }
                   />
-                  <VehicleDetailContent title="SERI" content="HGA163" />
+                  <VehicleDetailContent
+                    title="SERI"
+                    content={DashboardReducer.vehicles[vehicle.id - 1].seri}
+                  />
                 </View>
+              </View>
+              <View>
+                <Button label="Simpan" />
               </View>
             </View>
           </View>
@@ -204,5 +310,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+  },
+
+  addPicture: {
+    height: 100,
+    width: 100,
+    backgroundColor: colors.lightGrey,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+  },
+  addPictureText: {
+    fontFamily: fonts.Poppins.regular,
+    fontSize: 12,
+    color: colors.white,
+    position: 'absolute',
+    bottom: 13,
   },
 });

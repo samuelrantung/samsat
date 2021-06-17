@@ -12,10 +12,11 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
-import {colors, fonts, IMGVehicle} from '../../assets';
-import DATA from './VehicleData';
+import NumberFormat from 'react-number-format';
+import {colors, fonts, IMGVehicle, IMGVehicleDummy} from '../../assets';
 
 const Vehicle = ({
+  fotoMotor,
   policeNumber,
   vehicleName,
   vehicleType,
@@ -26,7 +27,14 @@ const Vehicle = ({
   <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.vehicleContainer}>
       <View style={styles.pictureContainer}>
-        <Image source={IMGVehicle} />
+        {fotoMotor ? (
+          <Image
+            source={{uri: `data:image/png;base64,${fotoMotor}`}}
+            style={styles.image}
+          />
+        ) : (
+          <Image source={IMGVehicleDummy} style={styles.image} />
+        )}
       </View>
       <View style={styles.vehicleText}>
         <Text style={styles.policeNumber}>{policeNumber}</Text>
@@ -35,7 +43,14 @@ const Vehicle = ({
           <Text style={styles.vehicleType}> {vehicleType}</Text>
         </Text>
         <Text style={styles.taxPrice}>
-          Rp <Text style={styles.taxPrice}>{price}</Text>
+          Rp
+          <NumberFormat
+            value={price}
+            displayType={'text'}
+            thousandSeparator="."
+            decimalSeparator=","
+            renderText={value => <Text style={styles.taxPrice}>{value}</Text>}
+          />
         </Text>
 
         <View style={styles.expireContainer}>
@@ -51,52 +66,22 @@ const Vehicle = ({
   </TouchableWithoutFeedback>
 );
 
-const VehicleList = ({onPress, nomorPolisi}) => {
-  const [vehicles, setVehicles] = useState([]);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
-    axios
-      .get('http://10.0.2.2:3004/vehicles')
-      .then(res => {
-        console.log('res get data: ', res);
-        setVehicles(res.data);
-      })
-      .catch(error => console.log(error));
-  };
-
-  return (
-    <ScrollView horizontal={true} style={styles.container}>
-      {vehicles.map(vehicle => {
-        return (
-          <Vehicle
-            key={vehicle.id}
-            policeNumber={vehicle.nomorPolisi}
-            vehicleName={vehicle.vehicleName}
-            vehicleType={vehicle.vehicleType}
-            price={vehicle.price}
-            onPress={onPress}
-            dueDate={vehicle.masaBerlakuSTNK}
-          />
-        );
-      })}
-    </ScrollView>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     height: 350,
     flexDirection: 'row',
+  },
+  image: {
+    width: 160,
+    height: 160,
   },
   pictureContainer: {
     height: 160,
     width: 160,
     borderRadius: 18,
     marginTop: -60,
+    elevation: 5,
+    backgroundColor: colors.white,
   },
   vehicleContainer: {
     height: 228,
@@ -160,4 +145,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VehicleList;
+export default Vehicle;

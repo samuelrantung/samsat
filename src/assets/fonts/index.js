@@ -1,12 +1,12 @@
 export const fonts = {
   Poppins: {
     200: 'Poppins-ExtraLight',
-    300: 'Poppins-Light',
+    light: 'Poppins-Light',
     medium: 'Poppins-Medium',
     semibold: 'Poppins-SemiBold',
     bold: 'Poppins-Bold',
     800: 'Poppins-ExtraBold',
-    900: 'Poppins-Black',
+    black: 'Poppins-Black',
     regular: 'Poppins-Regular',
   },
 };

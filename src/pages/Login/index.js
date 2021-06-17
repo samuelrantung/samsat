@@ -11,9 +11,11 @@ import {
   colors,
   fonts,
   IMGBapenda,
+  IMGFik,
   IMGJasaRaharja,
   IMGPemprov,
   IMGSatlantas,
+  IMGUnklab,
 } from '../../assets';
 import {useForm} from '../../assets/useForm';
 import {Gap, TextInput, CheckBox, Button} from '../../components';
@@ -89,9 +91,11 @@ const Login = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.logoContainer}>
+        <Image source={IMGFik} style={styles.fik} />
         <Image source={IMGSatlantas} style={styles.satlantas} />
         <Image source={IMGPemprov} style={styles.pemprov} />
         <Image source={IMGJasaRaharja} style={styles.jasaraharja} />
+        <Image source={IMGUnklab} style={styles.unklab} />
       </View>
     </SafeAreaView>
   );
@@ -111,9 +115,14 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flexDirection: 'row',
-    width: 209,
-    justifyContent: 'space-between',
+    width: '100%',
+    justifyContent: 'space-around',
     marginTop: 35,
+    paddingHorizontal: 15,
+  },
+  fik: {
+    width: 34,
+    height: 43,
   },
   satlantas: {
     width: 48,
@@ -126,6 +135,10 @@ const styles = StyleSheet.create({
   jasaraharja: {
     height: 47,
     width: 43,
+  },
+  unklab: {
+    width: 43,
+    height: 43,
   },
   mainTitle: {
     fontSize: 36,
